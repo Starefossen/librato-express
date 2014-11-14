@@ -1,0 +1,17 @@
+{
+    "name": "librato-express",
+    "version": "0.1.0",
+    "description": "Middleware for expressjs to send metrics to Librato.",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dmitrymatveev/librato-express"
+    },
+    "keywords": [
+        "librato",
+        "express",
+        "nodejs"
+    ],
+    "author": "Dmitry Matveev",
+    "license": "MIT"
+}

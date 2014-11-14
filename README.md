@@ -1,4 +1,1 @@
-librato-express
-===============
-
-Librato metrics as expressjs middleware.
+Middleware for expressjs to send metrics to Librato.
