@@ -59,6 +59,7 @@ function doSomething () {
 #### Global
 
 * [`Metrics.initialise`](#main)
+* [`Metrics.flush`](#main)
 * [`Metrics.start`](#main)
 
 #### Middleware
@@ -78,13 +79,16 @@ function doSomething () {
 Setup librato-express module using this function. It should be called before anything else.
 
 __Attributes__
-*`options.email` - Librato account email.
-*`options.token` - Librato provided token.
-*`options.period`  - Minimum frequency of sending librato metrics. Defaults to 1 second.
+* `options.email` - Librato account email.
+* `options.token` - Librato provided token.
+* `options.period`  - Minimum frequency of sending librato metrics. Defaults to 1 second.
 * `options.prefix` - Prefix to be used with all metric names. Defaults to empty string.
 
+### metrics.flush()
+Dumps accumulated data to Librato.
+
 ### metrics.start()
-Starts reporting in a forever circle.
+Starts calling `metrics.flush()` function in a forever circle.
 
 ## Middleware
 
@@ -98,15 +102,13 @@ Attaches necessary tracking properties to the request object. This needs to be s
 
 Creates middleware function that when invoked by express router will increment a metric with a specified name.
 
-__Attributes__
 * `options.name` - Name of the metric for Librato.
-*  `options.period` - Period of sending this metric to Librato. Defaults to Librato default period of 60 seconds.
-*  `options.source` - Librato source name for this metric.
-*  `options.ignoreNonDirty` - If set will prevent sending to Librato if this metric did not increment. Defaults to `true`.
+* `options.period` - Period of sending this metric to Librato. Defaults to Librato default period of 60 seconds.
+* `options.source` - Librato source name for this metric.
+* `options.ignoreNonDirty` - If set will prevent sending to Librato if this metric did not increment. Defaults to `true`.
 * `filter` - Can be either a `string` or a `function`. 
-
-* _String_ - matches property in the `request` object for the route. It can be delimited with any non-word character to match property in the nested object. Note that no type checks are performed and is solely up to a client to make sure references are present.
-* _Function_ - will receive `request` object for the route and should return a string value representing a filter key.  Returned value of`null` will cause the filter to be ignored. 
+	* _String_ - matches property in the `request` object for the route. It can be delimited with any non-word character to match property in the nested object. Note that no type checks are performed and is solely up to a client to make sure references are present.
+	* _Function_ - will receive `request` object for the route and should return a string value representing a filter key.  Returned value of`null` will cause the filter to be ignored.
 
 ```javascript
 // Make sure request object has 'userID' property.
@@ -127,9 +129,8 @@ app.use('/', .middleware.routeCount({name: 'check'}, function ( request ) {
 <a name="routeTiming" />
 ### routeTiming(options[, filter])
 
-Same as [`routeCount`](#routeCount) but will aggregate the delay values into a gauge specific parameter set.
+Same as [`routeCount`](#routeCount) but will aggregate the delay values into a [gauge specific parameters](http://dev.librato.com/v1/post/metrics) set.
 
-#### [Gauge Specific Parameters](http://dev.librato.com/v1/post/metrics)
 * count
 * min
 * max
