@@ -1,6 +1,6 @@
 {
     "name": "librato-express",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": "Dmitry Matveev",
     "description": "Middleware for expressjs to send metrics to Librato.",
     "main": "index.js",
