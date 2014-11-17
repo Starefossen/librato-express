@@ -8,6 +8,7 @@ Along with classes that expose core functions, it comes with [expressjs](http://
 var metrics = require('librato-express');
 var app = require( 'express' )();
 
+// have to pass on librato credentials
 metrics.initialise({
     email : libratouser@somemail.com
     token : 'libratoGeneratedToken'
@@ -15,12 +16,17 @@ metrics.initialise({
 
 metrics.start();
 
+// make sure request object has the property we want
 app.param('userID', function (req, res, next, value) {
 	req.userID = value;
 });
 
+// don't forget let librato-express do its thing on the stack
 app.use('/', metrics.middleware.use);
+
+// call metrics functions on desired routes
 app.use('/', [
+	...
 	metrics.middleware.routeCount({name: 'visit'}),
 	...
 ]);
