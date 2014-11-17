@@ -1,8 +1,7 @@
 # Librato Express
-Middleware for expressjs to send metrics to [Librato](https://www.librato.com/).
+[Librato](https://www.librato.com/) metrics client.
 
-Librato Express is a Librato Metrics client. It can be used both as [expressjs](http://expressjs.com/)
-middleware and stand-alone.
+Along with classes that expose core functions, it comes with [expressjs](http://expressjs.com/) middleware hooks.
 
 #### Middleware example
 ```javascript
@@ -35,7 +34,7 @@ app.use('/users/:userID', [
 #### Stand-alone example
 ```javascript
 var metrics = require('librato-express');
-var counter = new metrics.Counter({name: 'count_function_call', perido: 10});
+var counter = new metrics.Counter({name: 'some_function_call'});
 
 metrics.initialise({
     email : libratouser@somemail.com

@@ -1,7 +1,7 @@
 var async = require('async');
 var path = require('path');
 var assert = require('assert');
-var librato = require( path.resolve(__dirname, '../../index.js') );
+var librato = require( path.resolve(__dirname, '../../') );
 var TestTransport = require(path.resolve(__dirname, '../test-transport.js'));
 
 var request;
@@ -16,7 +16,7 @@ before(function () {
     });
 });
 
-describe('Metrics Middleware', function () {
+describe('Middleware', function () {
 
     it('use() should be correctly attached to request object', function () {
         librato.middleware.use(request, null, function () {

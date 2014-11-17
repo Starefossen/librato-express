@@ -3,7 +3,7 @@
     "version": "0.1.2",
     "author": "Dmitry Matveev",
     "description": "Middleware for expressjs to send metrics to Librato.",
-    "main": "index.js",
+    "main": "lib/index.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/dmitrymatveev/librato-express"
