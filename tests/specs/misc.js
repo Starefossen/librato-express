@@ -17,7 +17,7 @@ before(function () {
 
 describe('Deleting', function () {
 
-    it('all metrics', function ( done ) {
+    it('all metrics should generate correct search string', function ( done ) {
 
         librato.transport = new TestTransport(function ( metric, cb ) {
             console.log(metric);
@@ -26,6 +26,10 @@ describe('Deleting', function () {
 
         assert(false, 'not implemented');
         done();
-    })
+    });
+
+    it('on per metric basis should generate correct search string', function () {
+        assert(false, 'not implemented');
+    });
 
 });
