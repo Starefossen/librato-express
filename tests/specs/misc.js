@@ -10,8 +10,12 @@ var TestTransport = require(path.resolve(__dirname, '../test-transport.js'));
 before(function () {
 
     librato.initialise({
-        email : 'dmitrymatveev@yahoo.co.nz',
-        token : 'a9264b918bbaf4841bc56a84abbec87c3087fb2d878c8e0f6761624b842a7f47'
+        email: 'user@mail.com',
+        token: 'token'
+    });
+
+    librato.transport = new TestTransport(function ( metric, cb ) {
+        cb();
     });
 });
 

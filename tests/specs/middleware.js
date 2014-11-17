@@ -14,6 +14,11 @@ before(function () {
         email: 'user@mail.com',
         token: 'token'
     });
+
+    librato.transport = new TestTransport(function ( metric, cb ) {
+        cb();
+    });
+
 });
 
 describe('Middleware', function () {
