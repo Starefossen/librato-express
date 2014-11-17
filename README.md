@@ -194,7 +194,8 @@ Same as `Counter.deleteMetrics`.
 
 <a name="collector" />
 ### Collector()
-Constructor function
+Provides routines to temporary store and process metrics before sending to
+Librato.
 
 #### count(key, filter, callback)
 Increment count values.
@@ -219,7 +220,7 @@ Dump accumulated data.
 
 <a name="transport" />
 ### Transport(options)
-Constructor function.
+Simple HTTPS client to send data over network.
 
 * `options.email` - Librato account email.
 * `options.token` - Librato provided token.
