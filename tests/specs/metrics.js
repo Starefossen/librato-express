@@ -8,11 +8,9 @@ before(function () {
 
     librato.initialise({
         email: 'user@mail.com',
-        token: 'token'
-    });
-
-    librato.transport = new TestTransport(function ( metric, cb ) {
-        cb();
+        token: 'token',
+        transport: TestTransport.bind(this, function ( metric ) {
+        })
     });
 });
 

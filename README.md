@@ -61,39 +61,56 @@ function doSomething () {
 
 ## Documentation
 
-#### Global
+#### Base
 
 * [`Metrics.initialise`](#main)
 * [`Metrics.flush`](#main)
 * [`Metrics.start`](#main)
+* [`Metrics.deleteAllMetrics`](#main)
 
 #### Middleware
+
 * [`Metrics.middleware.use`](#use)
 * [`Metrics.middleware.routeCount`](#routeCount)
 * [`Metrics.middleware.routeTiming`](#routeTiming)
 
-#### Metrics Objects
+#### Metrics Classes
 
 * [`Metrics.Counter`](#counter)
 * [`Metrics.Timing`](#timing)
 
-## Global
+#### Worker Classes
+
+* [`Collector`](#collector)
+* [`Transport`](#transport)
+
+## Base
 
 <a name="main" />
 ### metrics.initialise(options)
 Setup librato-express module using this function. It should be called before anything else.
 
-__Attributes__
 * `options.email` - Librato account email.
 * `options.token` - Librato provided token.
 * `options.period`  - Minimum frequency of sending librato metrics. Defaults to 1 second.
 * `options.prefix` - Prefix to be used with all metric names. Defaults to empty string.
+
+It is possible to replace default implementation of parts of librato-express.
+* `options.collector` - [`Caching object`](#collector) responsible for temporary storing metrics
+before sending those to Librato.
+* `options.transport` - [`Https client`](#transport).
 
 ### metrics.flush()
 Dumps accumulated data to Librato.
 
 ### metrics.start()
 Starts calling `metrics.flush()` function in a forever circle.
+
+### metrics.deleteAllMetrics()
+Deletes all metrics from Librato that start with `Base.options.prefix`. Note:
+ If
+prefix was not specified this method will delete __all__ metrics from the
+account.
 
 ## Middleware
 
@@ -107,11 +124,14 @@ Attaches necessary tracking properties to the request object. This needs to be s
 
 Creates middleware function that when invoked by express router will increment a metric with a specified name.
 
-* `options.name` - Name of the metric for Librato.
+* `options.name` - Name of the metric for Librato. Note: `options.prefix`
+will be applied to this value.
 * `options.period` - Period of sending this metric to Librato. Defaults to Librato default period of 60 seconds.
 * `options.source` - Librato source name for this metric.
 * `options.ignoreNonDirty` - If set will prevent sending to Librato if this metric did not increment. Defaults to `true`.
-* `filter` - Can be either a `string` or a `function`. 
+* `filter` - This is a __postfix__ to apply to metric name. Can be either a
+`string` or a
+`function`.
 	* _String_ - matches property in the `request` object for the route. It can be delimited with any non-word character to match property in the nested object. Note that no type checks are performed and is solely up to a client to make sure references are present.
 	* _Function_ - will receive `request` object for the route and should return a string value representing a filter key.  Returned value of`null` will cause the filter to be ignored.
 
@@ -153,6 +173,10 @@ Creates a new `Counter` object. `Options` are the same as in [`routeCount`](#rou
 Increment counter value.
 * `filter` - Optional string value to append to metric name key.
 
+#### deleteMetrics()
+Deletes all metrics from Librato that start with the name of this metric
+class instance.
+
 <a name="timing" />
 ### Timing(options)
 Creates a new `Timing` object. `Options` are the same as in [`routeCount`](#routeCount)
@@ -160,4 +184,55 @@ Creates a new `Timing` object. `Options` are the same as in [`routeCount`](#rout
 #### measure(time[, filter])
 Increment counter value.
 * `time` - Time in the past to take the measurement from.
-* `filter` - Optional string value to append to metric name key.
+* `filter` - Same as in `Counter.increment`.
+
+#### deleteMetrics()
+Same as `Counter.deleteMetrics`.
+
+
+## Worker Classes
+
+<a name="collector" />
+### Collector()
+Constructor function
+
+#### count(key, filter, callback)
+Increment count values.
+
+* `key` - name of Librato metric.
+* `filter` - filter to apply to name.
+* `callback()` - callback function.
+
+#### timing(key, duration, filter, callback)
+Add to duration values.
+
+* `key` - name of Librato metric.
+* `duration` - next duration to log.
+* `filter` - filter to apply to name.
+* `callback()` - callback function.
+
+#### flush(callback)
+Dump accumulated data.
+
+* `callback({})` - Call this when finished with the metrics data object. Note: librato-express will ignore if `null` and `undefined` values.
+
+
+<a name="transport" />
+### Transport(options)
+Constructor function.
+
+* `options.email` - Librato account email.
+* `options.token` - Librato provided token.
+* `options.silent` - Flag to never pass connection information to callee.
+
+#### postMetrics(metric, callback)
+Send metric data to librato.
+
+* `metric` - Actual data to send.
+* `callback([err])` - callback function.
+
+#### deleteMetrics(names, callback)
+Delete metrics from librato.
+
+* `names` - list of name strings to send.
+* `callback([err])` - callback function.

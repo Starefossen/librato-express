@@ -7,33 +7,38 @@ var assert = require('assert');
 var librato = require( path.resolve(__dirname, '../../') );
 var TestTransport = require(path.resolve(__dirname, '../test-transport.js'));
 
-before(function () {
-
-    librato.initialise({
-        email: 'user@mail.com',
-        token: 'token'
-    });
-
-    librato.transport = new TestTransport(function ( metric, cb ) {
-        cb();
-    });
-});
-
 describe('Deleting', function () {
 
     it('all metrics should generate correct search string', function ( done ) {
 
-        librato.transport = new TestTransport(function ( metric, cb ) {
-            console.log(metric);
-            cb();
+        librato.initialise({
+            email: 'user@mail.com',
+            token: 'token',
+            prefix: 'prefix_',
+            transport: TestTransport.bind(this, function ( metric ) {
+                assert(metric[0] === 'prefix_*');
+            })
         });
 
-        assert(false, 'not implemented');
-        done();
+        librato.deleteAllMetrics(done);
     });
 
-    it('on per metric basis should generate correct search string', function () {
-        assert(false, 'not implemented');
+    it('metric should generate correct search string', function (done) {
+
+        librato.initialise({
+            email: 'user@mail.com',
+            token: 'token',
+            prefix: 'prefix_',
+            transport: TestTransport.bind(this, function ( metric ) {
+                assert(metric[0] === 'prefix_count_test*');
+            })
+        });
+
+        var metric = new librato.Counter({
+            name: 'test'
+        });
+
+        metric.deleteMetrics(done);
     });
 
 });
