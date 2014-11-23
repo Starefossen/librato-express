@@ -32,7 +32,7 @@ app.use('/', [
 ]);
 
 app.use('/users/:userID', [
-	metrics.middleware.routeCount({name: 'view_user'}, 'userID'),
+	metrics.middleware.routeTiming({name: 'view_user'}, 'userID'),
 	...
 ]);
 ```
@@ -129,6 +129,9 @@ will be applied to this value.
 * `options.period` - Period of sending this metric to Librato. Defaults to Librato default period of 60 seconds.
 * `options.source` - Librato source name for this metric.
 * `options.ignoreNonDirty` - If set will prevent sending to Librato if this metric did not increment. Defaults to `true`.
+* `options.alert` - Object describing custom alert definition. Note that this is not a [Librato Alert](http://dev.librato.com/v1/alerts).
+	* `alert.trigger(metric)` - Function accepting metric object which is about to be sent to Librato. Must return a boolean value to trigger an alert hook.
+	* `alert.handler(metric)` - This function will be called if trigger returned `true` value.
 * `filter` - This is a __postfix__ to apply to metric name. Can be either a
 `string` or a
 `function`.
