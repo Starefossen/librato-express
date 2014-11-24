@@ -79,6 +79,10 @@ function doSomething () {
 * [`Metrics.Counter`](#counter)
 * [`Metrics.Timing`](#timing)
 
+#### Annotations
+
+* [`Metrics.Annotation`](#annotation)
+
 #### Worker Classes
 
 * [`Collector`](#collector)
@@ -131,7 +135,7 @@ will be applied to this value.
 * `options.ignoreNonDirty` - If set will prevent sending to Librato if this metric did not increment. Defaults to `true`.
 * `options.alert` - Object describing custom alert definition. Note that this is not a [Librato Alert](http://dev.librato.com/v1/alerts).
 	* `alert.trigger(metric)` - Function accepting metric object which is about to be sent to Librato. Must return a boolean value to trigger an alert hook.
-	* `alert.handler(metric)` - This function will be called if trigger returned `true` value.
+	* `alert.handler(metric)` - This function will be called if trigger returned `true`.
 * `filter` - This is a __postfix__ to apply to metric name. Can be either a
 `string` or a
 `function`.
@@ -193,10 +197,58 @@ Increment counter value.
 Same as `Counter.deleteMetrics`.
 
 
+## Annotations
+
+<a name="annotation" />
+### Annotation(stream, options)
+***
+
+Creates new [annotation](http://dev.librato.com/v1/annotations) object assigned to a specific stream.
+
+* `stream` - Name of the stream.
+* `options.title` - Title of this annotation. Defaults to name of the stream.
+* `options.source` - An optional name of the source for this annotation.
+* `options.description` - An optional description.
+* `options.links` - Optional list of [links](http://dev.librato.com/v1/post/annotations/:name/:id/links) for this annotation.
+
+
+```javascript
+var metrics = require('librato-express');
+...
+
+var ann = new metrics.Annotation('some-annotation-stream', {
+	title : 'my-annotation',
+	links : [{rel: 'librato', href: 'http://dev.librato.com/v1/annotations'}]
+});
+ann.post();
+
+setTimeout(function () {
+	ann.post(); // Lets POST re-occurring instance of this event
+}, 300000);
+
+var other = new bmc.metrics.Annotation('some-annotation-stream', {title : 'my-other-annotation'});
+other.startMs(Date.now()-300000); // It actually occurred 5 minutes ago ;)
+other.endMs(); // And lasted until now
+other.post();
+```
+
+#### startMs([time])
+Sets start time for the next occurrence of annotation. Returns [unix timestamp](http://en.wikipedia.org/wiki/Unix_time) which will be sent to Librato.
+
+* `time` - Optional time in milliseconds. This will be converted into unix timestamp.
+
+#### endMs([time])
+Same as `startMs`.
+
+#### post([callback])
+Posts annotation to Librato. `Start` and `end` timestamps are cleared immediately after this operation.
+
 ## Worker Classes
 
 <a name="collector" />
 ### Collector()
+***
+
 Provides routines to temporary store and process metrics before sending to
 Librato.
 
@@ -223,6 +275,8 @@ Dump accumulated data.
 
 <a name="transport" />
 ### Transport(options)
+***
+
 Simple HTTPS client to send data over network.
 
 * `options.email` - Librato account email.

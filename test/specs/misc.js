@@ -16,7 +16,8 @@ describe('Deleting', function () {
             token: 'token',
             prefix: 'prefix_',
             transport: TestTransport.bind(this, function ( metric ) {
-                assert(metric[0] === 'prefix_*');
+                assert(metric.hasOwnProperty('names'));
+                assert(metric.names[0] === 'prefix_*');
             })
         });
 
@@ -30,7 +31,7 @@ describe('Deleting', function () {
             token: 'token',
             prefix: 'prefix_',
             transport: TestTransport.bind(this, function ( metric ) {
-                assert(metric[0] === 'prefix_count_test*');
+                assert(metric.names[0] === 'prefix_count_test*');
             })
         });
 
