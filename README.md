@@ -226,7 +226,7 @@ setTimeout(function () {
 	ann.post(); // Lets POST re-occurring instance of this event
 }, 300000);
 
-var other = new bmc.metrics.Annotation('some-annotation-stream', {title : 'my-other-annotation'});
+var other = new metrics.Annotation('some-annotation-stream', {title : 'my-other-annotation'});
 other.startMs(Date.now()-300000); // It actually occurred 5 minutes ago ;)
 other.endMs(); // And lasted until now
 other.post();
