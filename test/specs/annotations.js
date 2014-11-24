@@ -55,9 +55,7 @@ describe('Annotations', function () {
         start_time = ann.startMs();
         end_time = ann.endMs();
 
-        ann.post();
-
-        done();
+        ann.post(function () {});
     })
 
 });
