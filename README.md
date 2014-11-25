@@ -245,6 +245,8 @@ Posts annotation to Librato. `Start` and `end` timestamps are cleared immediatel
 
 ## Worker Classes
 
+These workers encapsulate 'behind the scenes' algorithms for the main functionality of the module. It is possible to implement custom strategies and replace default behaviour while initialising librato-express.
+
 <a name="collector" />
 ### Collector()
 ***
@@ -294,3 +296,10 @@ Delete metrics from librato.
 
 * `names` - list of name strings to send.
 * `callback([err])` - callback function.
+
+#### postMetrics(stream, data, callback)
+Posts annotation.
+
+* `stream` - name of the stream to POST into.
+* `data` - annotation body.
+* `callback([err])` - callback function
