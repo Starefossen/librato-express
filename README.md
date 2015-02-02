@@ -10,7 +10,7 @@ var app = require( 'express' )();
 
 // have to pass on librato credentials
 metrics.initialise({
-    email : libratouser@somemail.com
+    email : 'libratouser@somemail.com',
     token : 'libratoGeneratedToken'
 });
 
@@ -43,7 +43,7 @@ var metrics = require('librato-express');
 var counter = new metrics.Counter({name: 'some_function_call'});
 
 metrics.initialise({
-    email : libratouser@somemail.com
+    email : 'libratouser@somemail.com',
     token : 'libratoGeneratedToken'
 });
 metrics.start();
