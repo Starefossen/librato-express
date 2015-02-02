@@ -104,17 +104,21 @@ It is possible to replace default implementation of parts of librato-express.
 before sending those to Librato.
 * `options.transport` - [`Https client`](#transport).
 
-### metrics.flush()
+### metrics.flush(callback)
 Dumps accumulated data to Librato.
+
+* `callback()` - callback function.
 
 ### metrics.start()
 Starts calling `metrics.flush()` function in a forever circle.
 
-### metrics.deleteAllMetrics()
+### metrics.deleteAllMetrics(callback)
 Deletes all metrics from Librato that start with `Base.options.prefix`. Note:
  If
 prefix was not specified this method will delete __all__ metrics from the
 account.
+
+* `callback()` - callback function.
 
 ## Middleware
 
